@@ -7,6 +7,18 @@ from datetime import datetime, timedelta
 import pytz
 from streamlit_autorefresh import st_autorefresh  # New autorefresh component
 
+# Add this function
+def get_real_solar_data(latitude, longitude, api_key):
+    # Example for Solcast API
+    url = f"https://api.solcast.com.au/radiation/forecasts?latitude={latitude}&longitude={longitude}&api_key={api_key}"
+    response = requests.get(url)
+    data = response.json()
+    return data['forecasts'][0]['ghi']  # Global Horizontal Irradiance
+
+# Then replace the current_solar_yield assignment with:
+if data_source == "API Integration":
+    current_solar_yield = get_real_solar_data(lat, lon, MmUM6JLgxgV5WVpYCrOqYLrkFJlBqaxR)
+
 # Data setup
 cities = ['Barcelona', 'Berlin', 'Cairo', 'Delhi', 'Dubai', 'London', 'Madrid', 'Melbourne',
           'Milan', 'Mumbai', 'Paris', 'Riyadh', 'Rome', 'Seville', 'Sydney']
