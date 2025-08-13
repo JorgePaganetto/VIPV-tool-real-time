@@ -3,3 +3,5 @@ pandas
 plotly
 numpy
 pytz
+pytz
+requests  # If using API integration
