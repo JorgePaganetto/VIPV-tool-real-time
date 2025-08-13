@@ -1,13 +1,8 @@
-import requests
+mport os
+from dotenv import load_dotenv  # Required to load .env
 
-def fetch_solar_data(latitude, longitude, date):
-    API_URL = "https://api.example.com/solar"
-    params = {
-        'lat': latitude,
-        'lon': longitude,
-        'date': date,
-        'api_key': 'YOUR_API_KEY'
-    }
-    response = requests.get(API_URL, params=params)
-    response.raise_for_status()  # Raise errors for HTTP failures
-    return response.json()
+# Load variables from .env file
+load_dotenv()
+
+# Fetch using the VARIABLE NAME, not the key value
+API_KEY = os.getenv('SOLAR_API_KEY')  # Correct: 'SOLAR_API_KEY'
