@@ -1,7 +1,6 @@
 streamlit
 pandas
-plotly
 numpy
+plotly
 pytz
-pytz
-requests  # If using API integration
+streamlit_autorefresh
