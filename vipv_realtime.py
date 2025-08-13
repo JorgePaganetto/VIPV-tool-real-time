@@ -5,6 +5,7 @@ import plotly.express as px
 import time
 from datetime import datetime, timedelta
 import pytz
+from streamlit_autorefresh import st_autorefresh  # New autorefresh component
 
 # Data setup
 cities = ['Barcelona', 'Berlin', 'Cairo', 'Delhi', 'Dubai', 'London', 'Madrid', 'Melbourne',
@@ -16,21 +17,7 @@ surface_angles = {
     'rear_side_window': 30,  'front_side_window': 25,  'canopy': 0
 }
 
-segments = {
-    'B-HB (Micra)': {
-        'wltp': 12.5, 
-        'city': 9.4, 
-        'surfaces': {
-            'hood': {'area': 1.2, 'angle': surface_angles['hood']},
-            'roof': {'area': 1.5, 'angle': surface_angles['roof']},
-            'rear_window': {'area': 0.4, 'angle': surface_angles['rear_window']},
-            'rear_side_window': {'area': 0.6, 'angle': surface_angles['rear_side_window']},
-            'front_side_window': {'area': 0.5, 'angle': surface_angles['front_side_window']},
-            'canopy': {'area': 0, 'angle': surface_angles['canopy'], 'default': False}
-        }
-    },
-    # Add other segments similarly
-}
+# [YOUR SEGMENTS DATA HERE]
 
 # Default values
 default_utilization = 90
@@ -43,9 +30,6 @@ st.set_page_config(layout="wide", page_title="VIPV Solar Tracker")
 st.title("VIPV Solar Performance Tracker")
 st.markdown("### Real-time Solar Yield Monitoring and Projections")
 
-# Create tabs
-tab1, tab2 = st.tabs(["Configuration", "Live Dashboard"])
-
 # Initialize session state for real-time data
 if 'realtime_data' not in st.session_state:
     st.session_state.realtime_data = {
@@ -57,6 +41,9 @@ if 'realtime_data' not in st.session_state:
         'savings_accumulated': 0
     }
     st.session_state.start_time = datetime.now(pytz.utc)
+
+# Create tabs
+tab1, tab2 = st.tabs(["Configuration", "Live Dashboard"])
 
 with tab1:
     st.header("System Configuration")
@@ -144,9 +131,9 @@ with tab1:
                           index=0)
     
     if data_source == "Simulated Data":
-        st.slider("Simulated Solar Yield (W/m²)", 
+        st.session_state.simulated_yield = st.slider("Simulated Solar Yield (W/m²)", 
                  min_value=0, max_value=1500, 
-                 value=800, key='simulated_yield')
+                 value=800)
     else:
         st.info("API integration would be implemented here")
 
@@ -296,11 +283,10 @@ with tab2:
     if st.button("Refresh Data", type="primary"):
         st.experimental_rerun()
     
-    # Auto-refresh every 10 seconds
-    st_autorefresh = st.checkbox("Enable Auto-Refresh (every 10 seconds)", value=True)
-    if st_autorefresh:
-        time.sleep(10)
-        st.experimental_rerun()
+    # Add auto-refresh component
+    st.markdown("---")
+    refresh_rate = st.slider("Auto-refresh rate (seconds)", 5, 60, 10)
+    auto_refresh = st_autorefresh(interval=refresh_rate * 1000, key="data_refresh")
 
 # Footer
 st.markdown("---")
