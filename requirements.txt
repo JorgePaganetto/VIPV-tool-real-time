@@ -1,6 +1,3 @@
 streamlit
-pandas
-numpy
-plotly
-pytz
-streamlit_autorefresh
+requests
+python-dotenv
